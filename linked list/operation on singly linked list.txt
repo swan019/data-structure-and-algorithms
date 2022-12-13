@@ -1,0 +1,305 @@
+#include <iostream>
+using namespace std;
+class node
+{
+    int data;
+
+public:
+    node *next;
+    node(int data)
+    {
+        this->data = data;
+    }
+
+    node() {}
+
+    int getData()
+    {
+        return data;
+    }
+    friend class list;
+};
+
+class list
+{
+    node *head = NULL, *tail = NULL;
+
+public:
+    node *getTail()
+    {
+        return tail;
+    }
+
+    node *begin()
+    {
+        return head;
+    }
+
+    void push_back(int data)
+    {
+        if (head == NULL)
+        {
+            node *n = new node(data);
+            head = tail = n;
+        }
+        else
+        {
+            node *n = new node(data);
+            n->next = NULL;
+            tail->next = n;
+            tail = n;
+        }
+    }
+
+    void push_front(int data)
+    {
+        if (head == NULL)
+        {
+            node *n = new node(data);
+            head = tail = n;
+        }
+        else
+        {
+            node *n = new node(data);
+            n->next = head;
+            head = n;
+        }
+    }
+
+    void insert(int data, int pos)
+    {
+        node *temp = head;
+        if (pos == 0)
+        {
+            push_front(data);
+            return;
+        }
+
+        node *n = new node(data);
+        for (int i = 1; i <= pos - 1; ++i)
+        {
+            temp = temp->next;
+        }
+
+        n->next = temp->next;
+        temp->next = n;
+    }
+
+    void pop_back()
+    {
+        node *start = new node;
+        start = begin();
+        while (start->next->next != NULL)
+        {
+            start = start->next;
+        }
+
+        start->next = NULL; // free(start->next);
+        tail = start;
+    }
+
+    void pop_front()
+    {
+        head = begin();
+        if (head->next == NULL)
+        {
+            return;
+        }
+        node *start = new node;
+        start = head;
+        head = start->next;
+        free(start);
+        start->next = NULL;
+    }
+
+    void del_at_pos(int pos)
+    {
+        node *head, *privious, *current;
+        head = begin();
+        privious = current = head;
+
+        if (head == NULL)
+        {
+            cout << "linked list Empty " << endl;
+            return;
+        }
+        else if (pos == 1)
+        {
+            head = current->next;
+            current->next = NULL;
+        }
+        else
+        {
+            while (pos != 1)
+            {
+                privious = current;
+                current = current->next;
+                pos--;
+            }
+
+            privious->next = current->next;
+
+            current->next = NULL;
+            free(current);
+        }
+    }
+
+    void print()
+    {
+        node *head;
+        head = begin();
+        while (head != NULL)
+        {
+            cout << "|" << head->getData() << "|" << head->next << "| --> ";
+            head = head->next;
+        }
+
+        cout << endl;
+    }
+
+    bool issorted()
+    {
+        node *head = begin();
+        if (head == NULL)
+        {
+            return 0;
+        }
+        else if (head->next == NULL)
+        {
+            return 1;
+        }
+        else
+        {
+            int x = head->data;
+            head = head->next;
+            while (head != NULL)
+            {
+                if (head->data < x)
+                {
+                    return 0;
+                }
+
+                head = head->next;
+            }
+
+            return 1;
+        }
+    }
+
+    void remove_duplicate()
+    {
+        node *head, *p, *q;
+        head = begin();
+        p = head;
+        q = head->next;
+
+        while (q != NULL)
+        {
+            if (p->data != q->data)
+            {
+                p = q;
+                q = q->next;
+            }
+            else
+            {
+                p->next = q->next;
+                free(q);
+                q = p->next;
+            }
+        }
+    }
+};
+
+int main()
+{
+
+    // list l;
+    // l.push_back(10);
+    // l.push_back(18);
+    // l.push_front(100);
+    // l.push_back(122);
+    // l.push_back(33);
+    // l.insert(12244,1);
+    // node * head = l.begin();
+
+    // while(head != NULL)
+    // {
+    //     cout << head->getData() << " ";
+    //     head = head->next;
+    // }
+
+    //     node * tail = l.getTail();
+
+    //     cout << endl<< "tail->data : ";
+
+    //     cout << tail->getData() << " " << tail->next <<  endl;
+    //    // cout << "head->data " << head->getData() << " " << head->next << endl;
+    //     head = l.begin();
+    //     cout << "head->data " << head->getData() << " " << head->next << endl;
+
+    // l.pop_back();
+
+    // while(head != NULL)
+    // {
+    //     cout << head->getData() << " ";
+    //     head = head->next;
+    // }
+
+    // cout << endl;
+
+    // cout << l.getTail()->getData() << " " << l.getTail()->next << endl;
+
+    // l.pop_front();
+    // head = l.begin();
+    // while(head != NULL)
+    // {
+    //     cout << head->getData() <<" ";
+    //     head = head->next;
+    // }
+
+    // cout << endl;
+
+    // cout << l.begin()->getData() << " " << l.begin()->next << endl;
+
+    list l;
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; ++i)
+    {
+        int k;
+        cout << "Enter element : ";
+        cin >> k;
+        l.push_back(k);
+    }
+
+    l.print();
+
+    // l.push_front(99);
+
+    // l.print();
+
+    // l.pop_back();
+
+    // l.print();
+
+    // l.pop_front();
+
+    // l.print();
+
+    // l.del_at_pos(3);
+
+    // l.print();
+
+    // if(l.issorted())
+    // {
+    //     cout << "linked list is sorted " << endl;
+    // }else{
+    //     cout << "linked list is not sorted " << endl;
+    // }
+
+    // l.remove_duplicate();
+
+    // l.print();
+
+    return 0;
+}
